@@ -7,6 +7,7 @@ from typing import Optional
 
 app = FastAPI()
 
+
 class UserData(BaseModel):
     id: int
     email: str
@@ -14,17 +15,21 @@ class UserData(BaseModel):
     last_name: str
     avatar: str
 
+
 class SupportData(BaseModel):
     url: str
     text: str
+
 
 class ResponseModel(BaseModel):
     data: UserData
     support: SupportData
 
+
 class UserRequest(BaseModel):
     name: str
     job: str
+
 
 class CreateUserResponse(BaseModel):
     name: str
@@ -32,10 +37,12 @@ class CreateUserResponse(BaseModel):
     id: int
     createdAt: str
 
+
 class UpdateUserResponse(BaseModel):
     name: str
     job: str
     updatedAt: str
+
 
 class PatchUserRequest(BaseModel):
     name: Optional[str] = None
@@ -70,6 +77,7 @@ def get_user(user_id: int):
         "support": support_info
     }
 
+
 @app.post("/api/users", response_model=CreateUserResponse, status_code=201)
 def create_user(user: UserRequest):
     created_at = datetime.now().isoformat() + "Z"
@@ -80,6 +88,7 @@ def create_user(user: UserRequest):
         "createdAt": created_at
     }
 
+
 @app.put("/api/users/{user_id}", response_model=UpdateUserResponse)
 def update_user(user: UserRequest):
     updated_at = datetime.now().isoformat() + "Z"
@@ -89,6 +98,7 @@ def update_user(user: UserRequest):
         "updatedAt": updated_at
     }
 
+
 @app.patch("/api/users/{user_id}", response_model=UpdateUserResponse)
 def update_user(user: UserRequest):
     updated_at = datetime.now().isoformat() + "Z"
@@ -97,8 +107,10 @@ def update_user(user: UserRequest):
         "job": user.job,
         "updatedAt": updated_at
     }
+
 # To run this app, use the following command in your terminal:
 # uvicorn fastapi_microservice:app --reload
+
 
 if __name__ == "__main__":
     import uvicorn

@@ -20,7 +20,7 @@ def test_user_data(user_id, expected_email):
 
 def test_user_not_found():
     # url = f"https://reqres.in/api/users/23"
-    url = f"http://0.0.0.0:8000/api/users/23"
+    url = "http://0.0.0.0:8000/api/users/23"
 
     response = requests.get(url)
     assert response.status_code == 404, f"Response {response.status_code} {response.text}"
