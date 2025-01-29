@@ -1,5 +1,9 @@
+import random
+from datetime import datetime
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+from typing import Optional
+
 
 app = FastAPI()
 
@@ -17,6 +21,26 @@ class SupportData(BaseModel):
 class ResponseModel(BaseModel):
     data: UserData
     support: SupportData
+
+class UserRequest(BaseModel):
+    name: str
+    job: str
+
+class CreateUserResponse(BaseModel):
+    name: str
+    job: str
+    id: int
+    createdAt: str
+
+class UpdateUserResponse(BaseModel):
+    name: str
+    job: str
+    updatedAt: str
+
+class PatchUserRequest(BaseModel):
+    name: Optional[str] = None
+    job: Optional[str] = None
+
 
 @app.get("/api/users/{user_id}", response_model=ResponseModel)
 def get_user(user_id: int):
@@ -46,7 +70,33 @@ def get_user(user_id: int):
         "support": support_info
     }
 
+@app.post("/api/users", response_model=CreateUserResponse, status_code=201)
+def create_user(user: UserRequest):
+    created_at = datetime.now().isoformat() + "Z"
+    return {
+        "name": user.name,
+        "job": user.job,
+        "id": random.randint(1, 1000),
+        "createdAt": created_at
+    }
 
+@app.put("/api/users/{user_id}", response_model=UpdateUserResponse)
+def update_user(user: UserRequest):
+    updated_at = datetime.now().isoformat() + "Z"
+    return {
+        "name": user.name,
+        "job": user.job,
+        "updatedAt": updated_at
+    }
+
+@app.patch("/api/users/{user_id}", response_model=UpdateUserResponse)
+def update_user(user: UserRequest):
+    updated_at = datetime.now().isoformat() + "Z"
+    return {
+        "name": user.name,
+        "job": user.job,
+        "updatedAt": updated_at
+    }
 # To run this app, use the following command in your terminal:
 # uvicorn fastapi_microservice:app --reload
 
