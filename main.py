@@ -8,11 +8,21 @@ from http import HTTPStatus
 
 from models.User import User
 from models.AppStatus import AppStatus
+from fastapi_pagination import Page, add_pagination, paginate, Params
 import uvicorn
 
 app = FastAPI()
 
 users: list[User]
+
+
+@app.get("/api/users", response_model=Page[User])
+def get_users() -> Page[User]:
+    return paginate(users)
+
+
+add_pagination(app)
+
 
 @app.get("/api/status", status_code=HTTPStatus.OK)
 def status() -> AppStatus:
